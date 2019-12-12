@@ -13,7 +13,12 @@ import {
   Menu,
   MenuItem,
   Submenu,
-  MenuItemGroup
+  MenuItemGroup,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Row,
+  Col
 } from 'element-ui'
 
 // 将上边导入的组件注册到vue中
@@ -29,6 +34,11 @@ Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(Submenu)
 Vue.use(MenuItemGroup)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Row)
+Vue.use(Col)
 
 // 将Message挂载到vue中，相当于给vue增加了一个属性$message
 Vue.prototype.$message = Message

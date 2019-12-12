@@ -12,12 +12,12 @@
     <!-- 页面主体区域 -->
     <el-container>
       <!-- 左侧导航栏 -->
-      <el-aside :width="collapse ? '64px' : '200px'">
+      <el-aside :width="isCollapse ? '64px' : '200px'">
         <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!--侧边栏菜单区域  -->
         <!-- collapse 表示菜单是否折叠
          collapse-transition表示是否开启折叠动画-->
-        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened :collapse="collapse" :collapse-transition="false" :router="true">
+        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" unique-opened :collapse="isCollapse" :collapse-transition="false" :router="true" :default-active="activePath">
           <!-- 一级菜单 -->
           <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
             <!-- 一级菜单模板区域 -->
@@ -28,7 +28,7 @@
               <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单-->
-            <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
+            <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="saveNavState('/' + subItem.path)">
               <template slot="title">
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
@@ -61,11 +61,16 @@
           '102': 'iconfont icon-danju',
           '145': 'iconfont icon-baobiao'
         },
-        collapse: false
+        // 是否折叠
+        isCollapse: false,
+        // 被激活的链接地址
+        activePath: ''
       }
     },
     created() {
       this.getMenuList()
+      window.sessionStorage.setItem('activePath', this.$route.path)
+      this.activePath = this.$route.path
     },
     methods: {
       logout() {
@@ -78,10 +83,13 @@
         const { data: result } = await this.$http.get('menus')
         if (result.meta.status !== 200) return this.$message.error(result.meta.msg)
         this.menulist = result.data
-        console.log(this.menulist)
       },
       toggleCollapse() {
         this.collapse = !this.collapse
+      },
+      saveNavState(activePath) {
+        window.sessionStorage.setItem('activePath', this.$route.path)
+        this.activePath = activePath
       }
     }
   }
