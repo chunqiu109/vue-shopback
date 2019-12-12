@@ -18,7 +18,11 @@ import {
   BreadcrumbItem,
   Card,
   Row,
-  Col
+  Col,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip
 } from 'element-ui'
 
 // 将上边导入的组件注册到vue中
@@ -39,6 +43,10 @@ Vue.use(BreadcrumbItem)
 Vue.use(Card)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Switch)
+Vue.use(Tooltip)
 
 // 将Message挂载到vue中，相当于给vue增加了一个属性$message
 Vue.prototype.$message = Message

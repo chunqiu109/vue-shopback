@@ -85,7 +85,7 @@
         this.menulist = result.data
       },
       toggleCollapse() {
-        this.collapse = !this.collapse
+        this.isCollapse = !this.isCollapse
       },
       saveNavState(activePath) {
         window.sessionStorage.setItem('activePath', this.$route.path)
