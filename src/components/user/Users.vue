@@ -42,7 +42,7 @@
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="editUserById(scope.row.id)"></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
             <!-- 删除按钮 -->
             <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             <!-- 分配角色按钮
@@ -66,9 +66,10 @@
         :total="total">
       </el-pagination>
     </el-card>
+
     <!--   添加用户对话框   -->
     <!-- dialog 对话框组件  visible.sync的值为布尔值，true则显示对话框，false隐藏对话框 -->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible">
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <el-form ref="addUserFormRef" :model="addUserForm" :rules="addUserFormRules" label-width="70px">
         <!--    用户名    -->
         <el-form-item label="用户名:" prop="username">
@@ -90,6 +91,28 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUser">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!--  修改用户对话框  -->
+    <el-dialog title="修改用户" width="50%" :visible.sync="editDialogVisible" @close="editDialogClosed">
+      <el-form ref="editUserFormRef" :model="editUserForm" :rules="editUserFormRules" label-width="70px">
+        <!--    用户名    -->
+        <el-form-item label="用户名:" prop="username">
+          <el-input v-model="editUserForm.username" disabled></el-input>
+        </el-form-item>
+        <!--    邮箱    -->
+        <el-form-item label="邮 箱:" prop="email">
+          <el-input v-model="editUserForm.email"></el-input>
+        </el-form-item>
+        <!--    电话    -->
+        <el-form-item label="电 话:" prop="mobile">
+          <el-input v-model="editUserForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editUser">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -125,12 +148,14 @@
           //当前页数
           pagenum: 1,
           //每页显示数量
-          pagesize: 10
+          pagesize: 2
         },
         userList: [],
         total: 0,
-        //对话框的显示和隐藏
+        //添加用户对话框的显示和隐藏
         addDialogVisible: false,
+        //编辑用户对话框的显示和隐藏
+        editDialogVisible: false,
         // 添加用户表单
         addUserForm: {
           username: '',
@@ -153,12 +178,32 @@
           // 验证邮箱是否合法
           email: [
             { required: true, message: '请输入邮箱地址！', trigger: 'blur' },
-            { validator:checkEmail, trigger: 'blur' }
-            ],
-          // 验证邮箱是否合法
-          phone: [
+            { validator: checkEmail, trigger: 'blur' }
+          ],
+          // 验证手机号是否合法
+          mobile: [
             { required: true, message: '请输入手机号！', trigger: 'blur' },
-            { validator:checkPhone, trigger: 'blur' }
+            { validator: checkPhone, trigger: 'blur' }
+          ]
+        },
+        // 修改用户表单
+        editUserForm: {},
+        // 修改用户表单验证规则
+        editUserFormRules: {
+          // 验证密码是否合法
+          password: [
+            { required: true, message: '请输入登录密码！', trigger: 'blur' },
+            { min: 6, max: 15, message: '长度在 6 到 15 个字符！', trigger: 'blur' }
+          ],
+          // 验证邮箱是否合法
+          email: [
+            { required: true, message: '请输入邮箱地址！', trigger: 'blur' },
+            { validator: checkEmail, trigger: 'blur' }
+          ],
+          // 验证手机号是否合法
+          mobile: [
+            { required: true, message: '请输入手机号！', trigger: 'blur' },
+            { validator: checkPhone, trigger: 'blur' }
           ]
         }
       }
@@ -214,6 +259,43 @@
           this.addDialogVisible = false
           //从新获取数据
           this.queryUserList()
+        })
+      },
+      // 监听添加用户对话框的关闭事件
+      addDialogClosed() {
+        this.$refs.addFormRef.resetFields()
+      },
+      // 监听修改用户对话框的关闭事件
+      editDialogClosed() {
+        this.$refs.editUserFormRef.resetFields()
+      },
+      //展示编辑对话框
+      async showEditDialog(userId) {
+        // 根据用户id 查询数据
+        const { data: result } = await this.$http.get('/users/' + userId)
+        if (result.meta.status !== 200) return this.$message.error('查询失败！')
+        this.editUserForm = result.data
+        // 展示对话框
+        this.editDialogVisible = true
+      },
+      // 编辑用户
+      editUser() {
+        // console.log('修改用户')
+        this.$refs.editUserFormRef.validate(async valid => {
+          console.log('修改用户')
+          if (!valid) return
+          // 发起修改用户信息的数据请求
+          const { data: result } = await this.$http.put('users/' + this.editUserForm.id, {
+            email: this.editUserForm.email,
+            mobile: this.editUserForm.mobile
+          })
+          if (result.meta.status !== 200) return this.$message.error('修改失败！')
+          // 关闭对话框
+          this.editDialogVisible = false
+          // 刷新数据
+          this.queryUserList()
+          // 提示信息
+          this.$message.success('修改成功！')
         })
       }
     }
