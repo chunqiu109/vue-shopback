@@ -83,13 +83,13 @@
           <el-input v-model="addUserForm.email"></el-input>
         </el-form-item>
         <!--    电话    -->
-        <el-form-item label="电 话:" prop="phone">
-          <el-input v-model="addUserForm.phone"></el-input>
+        <el-form-item label="电 话:" prop="mobile">
+          <el-input v-model="addUserForm.mobile"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -136,7 +136,7 @@
           username: '',
           password: '',
           email: '',
-          phone: ''
+          mobile: ''
         },
         // 添加用户表单验证规则
         addUserFormRules: {
@@ -196,6 +196,25 @@
           return this.$message.error('修改失败:' + result.meta.msg)
         }
         this.$message.success(result.meta.msg)
+      },
+      // 添加用户
+      addUser() {
+        console.log(this.$refs.addUserFormRef)
+        this.$refs.addUserFormRef.validate(async valid => {
+          // 获取表单失败
+          if (!valid) return
+          //发送添加用户请求
+          const { data: result } = await this.$http.post('users', this.addUserForm)
+          console.log(result.meta.status)
+          if (result.meta.status !== 201) {
+            return this.$message.error('添加用户失败：' + result.meta.msg)
+          }
+          this.$message.success(result.meta.msg)
+          // 添加完毕之后关闭对话框
+          this.addDialogVisible = false
+          //从新获取数据
+          this.queryUserList()
+        })
       }
     }
   }
