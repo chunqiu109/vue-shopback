@@ -153,12 +153,12 @@
           // 验证邮箱是否合法
           email: [
             { required: true, message: '请输入邮箱地址！', trigger: 'blur' },
-            { validator:checkEmail, message: '邮箱格式不正确！', trigger: 'blur' }
+            { validator:checkEmail, trigger: 'blur' }
             ],
           // 验证邮箱是否合法
           phone: [
             { required: true, message: '请输入手机号！', trigger: 'blur' },
-            { validator:checkPhone, message: '手机号格式不正确！', trigger: 'blur' }
+            { validator:checkPhone, trigger: 'blur' }
           ]
         }
       }
