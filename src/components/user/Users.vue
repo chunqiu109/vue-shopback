@@ -44,7 +44,7 @@
             <!-- 修改按钮 -->
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
             <!-- 删除按钮 -->
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
             <!-- 分配角色按钮
                   content属性表示鼠标放上去的时候提示的文字，
                   effect表示鼠标放上去时候的背景颜色，
@@ -156,6 +156,8 @@
         addDialogVisible: false,
         //编辑用户对话框的显示和隐藏
         editDialogVisible: false,
+        // 删除用户对话框的显示和隐藏
+        delDialogVisible: false,
         // 添加用户表单
         addUserForm: {
           username: '',
@@ -280,9 +282,7 @@
       },
       // 编辑用户
       editUser() {
-        // console.log('修改用户')
         this.$refs.editUserFormRef.validate(async valid => {
-          console.log('修改用户')
           if (!valid) return
           // 发起修改用户信息的数据请求
           const { data: result } = await this.$http.put('users/' + this.editUserForm.id, {
@@ -297,6 +297,23 @@
           // 提示信息
           this.$message.success('修改成功！')
         })
+      },
+      // 根据id删除用户操作
+      async removeUserById(id) {
+        // $confirm需要按需导入并挂载到vue中，如果不catch，用户在点击取消的时候就会报错
+        const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).catch(err => err)
+        console.log(id)
+        // 如果用户点击取消confirmResult=cancel，如果用户点击确认如果用户点击取消confirmResult=confirm
+        if (confirmResult !== 'confirm') return this.$message.info('已经取消删除！')
+        const { data: result } = await this.$http.delete('users/' + id)
+        if (result.meta.status !== 200) return this.$message.error('删除失败：' + result.meta.msg)
+        this.$message.success('删除成功！')
+        // 删除成功之后刷新列表
+        this.queryUserList()
       }
     }
   }
