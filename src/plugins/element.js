@@ -25,7 +25,8 @@ import {
   Tooltip,
   Pagination,
   Dialog,
-  MessageBox
+  MessageBox,
+  Tag
 } from 'element-ui'
 
 // 将上边导入的组件注册到vue中
@@ -52,6 +53,7 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Tag)
 
 // 将Message挂载到vue中，相当于给vue增加了一个属性$message
 Vue.prototype.$message = Message
