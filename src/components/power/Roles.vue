@@ -168,7 +168,7 @@
       async allotRights() {
         console.log('我来分配权限')
         const keys = [
-          ...this.$refs.treeRef.getCheckedKeys(),
+          ...this.$refs.treeRef.getCheckedKeys(), // ...表示将数组中的值全部展开
           ...this.$refs.treeRef.getHalfCheckedKeys()
         ]
         console.log(keys)
