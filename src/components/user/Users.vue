@@ -219,18 +219,15 @@
         const { data: result } = await this.$http.get('users', { params: this.queryParam })
         if (result.meta.status !== 200) return this.$message.error('获取用户列表失败')
         this.userList = result.data.users
-        // console.log(this.userList)
         this.total = result.data.total
       },
       //监听每页显示数量事件，数据改变需要更新queryParam中的数据，再从新调用接口返回修改完页码的数据
       handleSizeChange(newsize) {
-        console.log(newsize)
         this.queryParam.pagesize = newsize
         this.queryUserList()
       },
       //监听页码改变事件
       handleCurrentChange(newnum) {
-        console.log(newnum)
         this.queryParam.pagenum = newnum
         this.queryUserList()
       },
@@ -246,13 +243,11 @@
       },
       // 添加用户
       addUser() {
-        console.log(this.$refs.addUserFormRef)
         this.$refs.addUserFormRef.validate(async valid => {
           // 获取表单失败
           if (!valid) return
           //发送添加用户请求
           const { data: result } = await this.$http.post('users', this.addUserForm)
-          console.log(result.meta.status)
           if (result.meta.status !== 201) {
             return this.$message.error('添加用户失败：' + result.meta.msg)
           }
@@ -306,7 +301,6 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).catch(err => err)
-        console.log(id)
         // 如果用户点击取消confirmResult=cancel，如果用户点击确认如果用户点击取消confirmResult=confirm
         if (confirmResult !== 'confirm') return this.$message.info('已经取消删除！')
         const { data: result } = await this.$http.delete('users/' + id)
