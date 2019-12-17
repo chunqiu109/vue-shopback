@@ -64,8 +64,12 @@
                props 用来指定配置对象 ：声明展示数据的规则
                v-model 展示的元素id（此id是props属性中value的集合）
                clearable 可以清空
-               checkStrictly 任意一级都可以选中-->
-          <el-cascader size="large" :props="cascaderProps" checkStrictly :options="parentCatelist" v-model="selectedKeys" @change="parentCateChanged" clearable>
+               checkStrictly 任意一级都可以选中
+               下边的语法是2.13的，但是付款是撑满全屏不知道原因，所以这个项目中只能使用2.6.3 一定要谨记
+               -->
+<!--          <el-cascader size="large" :props="cascaderProps" checkStrictly :options="parentCatelist" v-model="selectedKeys" @change="parentCateChanged" clearable>-->
+<!--          </el-cascader>-->
+          <el-cascader expand-trigger="hover" :options="parentCatelist" :props="cascaderProps" v-model="selectedKeys" @change="parentCateChanged" clearable change-on-select>
           </el-cascader>
         </el-form-item>
       </el-form>
@@ -141,14 +145,11 @@
         },
         // 父级分类数组
         parentCatelist: [],
-        parentCatelist1: [],
         // 指定级联选择器的配置对象
         cascaderProps: {
           value: 'cat_id',
           label: 'cat_name',
-          children: 'children',
-          expandTrigger: 'hover',
-          checkStrictly: true
+          children: 'children'
         },
         // 选中的父级分类的Id数组
         selectedKeys: []
@@ -191,11 +192,6 @@
           return this.$message.error('获取父级商品分类失败！')
         }
         this.parentCatelist = result.data
-        // const str = JSON.stringify(this.parentCatelist).toString().replace(/cat_id/g, 'value').replace(/cat_name/g, 'label')
-        const str = JSON.stringify(this.parentCatelist).toString()
-        console.log(str)
-        // this.parentCatelist = JSON.parse(str)
-        // console.log(this.parentCatelist)
       },
       //当父级分类选择发生变化的时候触发此函数
       parentCateChanged() {
