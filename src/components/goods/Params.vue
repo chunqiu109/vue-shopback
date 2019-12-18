@@ -76,7 +76,19 @@
             <!--     展开行       -->
             <el-table-column align="center" type="expand">
               <template slot-scope="scope">
-                <el-tag size="mini" v-for="(item, i) in scope.row.attr_vals" :key="i" closable>{{item}}</el-tag>
+                <!--       循环tag标签         -->
+                <el-tag size="mini" v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="handleClose(i, scope.row)">{{item}}</el-tag>
+                <!--  输入的文本框 -->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)"></el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag
+                </el-button>
               </template>
             </el-table-column>
             <!--     索引列       -->

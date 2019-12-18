@@ -35,7 +35,10 @@ import {
   Tabs,
   TabPane,
   Steps,
-  Step
+  Step,
+  Checkbox,
+  CheckboxGroup,
+  Upload
 } from 'element-ui'
 
 // 将上边导入的组件注册到vue中
@@ -72,6 +75,9 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Steps)
 Vue.use(Step)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Upload)
 
 // 将Message挂载到vue中，相当于给vue增加了一个属性$message
 Vue.prototype.$message = Message

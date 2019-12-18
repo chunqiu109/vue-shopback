@@ -6,6 +6,13 @@ import './assets/css/global.css'
 // 引入字体图标样式
 import './assets/css/fonts/iconfont.css'
 
+// 导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+// require styles 导入富文本编辑器对应的样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 // 引入树形控件
 import TreeTable from 'vue-table-with-tree-grid'
 
@@ -38,6 +45,9 @@ Vue.filter('dateFormat', function (orginValue) {
 Vue.config.productionTip = false
 
 Vue.component('tree-table', TreeTable)
+
+// 将富文本编辑器，注册为全局可用的组件
+Vue.use(VueQuillEditor)
 
 new Vue({
   router,
