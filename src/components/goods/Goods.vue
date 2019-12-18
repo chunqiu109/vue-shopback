@@ -21,7 +21,7 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="addDialogVisible = true">添加商品</el-button>
+          <el-button type="primary" @click="goAdd">添加商品</el-button>
         </el-col>
       </el-row>
 
@@ -39,9 +39,9 @@
         <el-table-column align="center" label="操作" width="180px">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)">编辑</el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.goods_id)">编辑</el-button>
             <!-- 删除按钮 -->
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)">删除</el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removGoodById(scope.row.goods_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,9 +72,7 @@
           pagesize: 10
         },
         goodsList: [],
-        total: 0,
-        //添加用户对话框的显示和隐藏
-        addDialogVisible: false
+        total: 0
       }
     },
     created() {
@@ -104,6 +102,34 @@
       handleCurrentChange(newnum) {
         this.queryInfo.pagenum = newnum
         this.queryGoodsList()
+      },
+      // 商品删除
+      async removGoodById(id) {
+        console.log(id)
+        const confirmResult = await this.$confirm(
+          '此操作将永久删除该商品，是否继续？',
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).catch(err => err)
+        if (confirmResult !== 'confirm') {
+          return this.$message.info('已经取消删除！')
+        }
+
+        const { data: res } = await this.$http.delete(`goods/${id}`)
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('删除失败！')
+        }
+
+        this.$message.success('删除成功！')
+        this.queryGoodsList()
+      },
+      goAdd() {
+        this.$router.push('/goods/add')
       }
     }
   }
