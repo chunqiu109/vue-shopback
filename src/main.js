@@ -5,6 +5,8 @@ import './plugins/element.js'
 import './assets/css/global.css'
 // 引入字体图标样式
 import './assets/css/fonts/iconfont.css'
+
+// 引入树形控件
 import TreeTable from 'vue-table-with-tree-grid'
 
 import axios from 'axios'
@@ -19,6 +21,19 @@ axios.interceptors.request.use(config => {
   return config
 })
 Vue.prototype.$http = axios
+
+// 定义一个全聚德时间过滤器
+Vue.filter('dateFormat', function (orginValue) {
+  const date = new Date(orginValue)
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1 + '').padStart(2, '0')
+  const day = (date.getDay() + '').padStart(2, '0')
+  const hour = (date.getHours() + '').padStart(2, '0')
+  const minute = (date.getMinutes() + '').padStart(2, '0')
+  const second = (date.getSeconds() + '').padStart(2, '0')
+
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+})
 
 Vue.config.productionTip = false
 
