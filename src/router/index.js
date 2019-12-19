@@ -10,7 +10,7 @@ import Categories from '../components/goods/Categories'
 import Params from '../components/goods/Params'
 import Goods from '../components/goods/Goods'
 import Add from '../components/goods/Add'
-import Order from '../components/goods/Order'
+import Order from '../components/orders/Order'
 
 Vue.use(VueRouter)
 

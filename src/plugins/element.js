@@ -38,7 +38,9 @@ import {
   Step,
   Checkbox,
   CheckboxGroup,
-  Upload
+  Upload,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 
 // 将上边导入的组件注册到vue中
@@ -78,6 +80,8 @@ Vue.use(Step)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 
 // 将Message挂载到vue中，相当于给vue增加了一个属性$message
 Vue.prototype.$message = Message
