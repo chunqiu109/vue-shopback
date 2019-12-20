@@ -17,7 +17,14 @@
       </el-row>
 
       <!--    权限列表用户区域    -->
-      <el-table :data="roleList" border stripe>
+      <!--   此处注意：
+              在使用vue ui界面中的生产打包的时候（build），打完包之后页面的数据并不显示，查看控制台报错：
+              　[Vue warn]: Error in callback for watcher "data": "Error: if there‘s nested data, rowKey is required."
+              大致意思就是如果有嵌套的数据，需要在el-table标签中新增row-key字段。
+              看代码里边的循环有嵌套循环使用，所以这里必须要加上row-key属性
+              但是如果说在开发环境中就没有这个问题
+         -->
+      <el-table row-key="id" :data="roleList" border stripe>
         <!--  展开列  -->
         <el-table-column align="center" type="expand">
           <template slot-scope="scope">
